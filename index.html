@@ -80,37 +80,58 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <label for="front_id">Upload Front of ID:</label><br>
 <input type="file" name="front_id" id="front_id" accept="image/*" required style="margin-bottom: 10px;"><br>
 <img id="previewFront" style="max-width: 100%; margin-top: 10px;" />
+<small id="front_warning" style="color: orange;"></small>
 
 
     <label for="back_id">Upload Back of ID:</label><br>
 <input type="file" name="back_id" id="back_id" accept="image/*" required style="margin-bottom: 10px;"><br>
 <img id="previewBack" style="max-width: 100%; margin-top: 10px;" />
+<small id="back_warning" style="color: orange;"></small>
 
     <button type="submit" style="padding: 10px 20px; background-color: green; color: white; border: none; border-radius: 5px; cursor: pointer;">
   Verify Now
   </form>
 </div>
 <script>
-  document.getElementById("front_id").addEventListener("change", function (e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        document.getElementById("previewFront").src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  });
+document.getElementById("front_id").addEventListener("change", function (e) {
+  const file = e.target.files[0];
+  const preview = document.getElementById("previewFront");
+  const warning = document.getElementById("front_warning");
 
-  document.getElementById("back_id").addEventListener("change", function (e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        document.getElementById("previewBack").src = event.target.result;
-      };
-      reader.readAsDataURL(file);
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      preview.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    // Check size (5MB = 5 * 1024 * 1024 bytes)
+    if (file.size > 5 * 1024 * 1024) {
+      warning.innerText = "⚠️ File is too large (max 5MB). You can still submit.";
+    } else {
+      warning.innerText = "";
     }
-  });
+  }
+});
+
+document.getElementById("back_id").addEventListener("change", function (e) {
+  const file = e.target.files[0];
+  const preview = document.getElementById("previewBack");
+  const warning = document.getElementById("back_warning");
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      preview.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    if (file.size > 5 * 1024 * 1024) {
+      warning.innerText = "⚠️ File is too large (max 5MB). You can still submit.";
+    } else {
+      warning.innerText = "";
+    }
+  }
+});
 </script>
 
